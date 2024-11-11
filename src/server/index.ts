@@ -1,9 +1,11 @@
 import express from 'express';
 import path from 'path';
 import { logger } from './lib/logger';
+import { selfPingHandler, useSelfPingSecret } from './lib/self-ping';
 
 const app = express();
 
+app.post('/api/self-ping', express.json(), useSelfPingSecret, selfPingHandler);
 app.post('/api/log', express.json(), logger.handler);
 
 const jsPath = path.join(__dirname, '../..', 'out/client');

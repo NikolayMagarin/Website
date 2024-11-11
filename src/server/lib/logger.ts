@@ -20,7 +20,7 @@ export const logger: Logger = {
       });
     }
 
-    res.sendStatus(200);
+    res.status(200).json({ ok: true });
   },
 
   log(group, message, data) {
