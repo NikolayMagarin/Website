@@ -16,7 +16,7 @@ export const logger: Logger = {
     ) {
       logger.log('user-analytics', req.body.message, {
         ...(req.body.data ? req.body.data : {}),
-        ip: req.ip,
+        ips: req.ips,
       });
     }
 

@@ -13,7 +13,6 @@ export const useSelfPingSecret: RequestHandler = (req, res, next) => {
 
 export const selfPingHandler: RequestHandler = (req, res) => {
   if (requiresSelfPing) {
-    console.log('ping');
     setTimeout(ping, config.selfPingInterval);
   }
   res.json({ ok: true, status: 'alive' });

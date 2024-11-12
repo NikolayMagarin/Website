@@ -1,5 +1,5 @@
 html {
-  height: 100vh;
+  height: 100dvh;
 }
 
 header {
@@ -30,11 +30,13 @@ body {
   font-weight: bold;
 }
 
-.text-box {
+.btn-wrapper {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-44px, -18px);
+  width: fit-content;
+  height: fit-content;
+  transform: translate(-50%, -50%);
 }
 
 .btn {
@@ -50,7 +52,6 @@ body {
   display: inline-block;
   border-radius: 100px;
   transition: all 0.2s;
-  position: absolute;
 }
 
 .btn:hover {
