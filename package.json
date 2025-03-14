@@ -17,11 +17,14 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "firebase-admin": "^12.7.0",
+    "jimp": "^1.6.0",
+    "request-ip": "^3.3.0",
     "typescript": "^5.6.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
-    "@types/node": "^22.9.0"
+    "@types/node": "^22.9.0",
+    "@types/request-ip": "^0.0.41"
   }
 }

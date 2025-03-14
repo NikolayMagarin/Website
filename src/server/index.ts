@@ -2,11 +2,14 @@ import express from 'express';
 import path from 'path';
 import { logger } from './lib/logger';
 import { selfPingHandler, useSelfPingSecret } from './lib/self-ping';
+import { enableServices } from './services';
 
 const app = express();
 
 app.post('/api/self-ping', express.json(), useSelfPingSecret, selfPingHandler);
 app.post('/api/log', express.json(), logger.handler);
+
+enableServices(app);
 
 const jsPath = path.join(__dirname, '../..', 'out/client');
 app.use(
@@ -24,7 +27,3 @@ app.use('/', (req, res) => {
 });
 
 app.listen(8080);
-
-// (async () => {
-//   await db.collection('rickrolled').add({ timestamp: new Date() });
-// })();

@@ -1,4 +1,5 @@
 import { RequestHandler } from 'express';
+import { config } from '../config';
 import { db } from './db';
 
 interface Logger {
@@ -16,7 +17,6 @@ export const logger: Logger = {
     ) {
       logger.log('user-analytics', req.body.message, {
         ...(req.body.data ? req.body.data : {}),
-        ips: req.ips,
       });
     }
 
@@ -26,15 +26,17 @@ export const logger: Logger = {
   log(group, message, data) {
     console.log(`[${group}] ${message}`);
 
-    const date = new Date();
-    db.collection('logs')
-      .doc(date.toLocaleDateString('ru'))
-      .collection('logs')
-      .add({
-        time: date.toLocaleTimeString(),
-        group,
-        message,
-        ...(data ? { data } : {}),
-      });
+    if (config.environment === 'prod') {
+      const date = new Date();
+      db.collection('logs')
+        .doc(date.toLocaleDateString('ru'))
+        .collection('logs')
+        .add({
+          time: date.toLocaleTimeString(),
+          group,
+          message,
+          ...(data ? { data } : {}),
+        });
+    }
   },
 };
