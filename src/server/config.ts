@@ -17,6 +17,7 @@ interface Config {
   selfUrl: string;
   selfPingSecret: string;
   selfPingInterval: number;
+  ip2LocationApiKey: string;
 }
 
 export const config: Config = {
@@ -27,4 +28,5 @@ export const config: Config = {
   selfUrl: getEnvValue('SELF_URL'),
   selfPingSecret: getEnvValue('SELF_PING_SECRET'),
   selfPingInterval: parseInt(getEnvValue('SELF_PING_INTERVAL')),
+  ip2LocationApiKey: getEnvValue('API2LOCATION_API_KEY'),
 };

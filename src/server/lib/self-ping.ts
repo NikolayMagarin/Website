@@ -1,4 +1,5 @@
 import { RequestHandler } from 'express';
+import fetch from 'node-fetch';
 import { config } from '../config';
 
 const requiresSelfPing = config.environment === 'prod';
