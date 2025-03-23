@@ -1,8 +1,10 @@
 import { Express } from 'express';
 import { router as getMyIpImgRouter } from './get-my-ip-img';
+import { router as desmosApiRouter } from './desmos';
 
 const routers = {
   'get-my-ip-img': getMyIpImgRouter,
+  desmos: desmosApiRouter,
 } as const;
 
 type RouterPath = keyof typeof routers;
