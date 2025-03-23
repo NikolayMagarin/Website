@@ -4,7 +4,13 @@ import { db } from './db';
 
 interface Logger {
   handler: RequestHandler;
-  log: (group: string, message: string, data?: Record<string, any>) => void;
+  log: (group: string, message: string, data?: Data, options?: Options) => void;
+}
+
+type Data = Record<string, any>;
+
+interface Options {
+  logData?: boolean;
 }
 
 const validUserAnalyticsMessages = new Set(['rickrolled-counter']);
@@ -23,8 +29,12 @@ export const logger: Logger = {
     res.status(200).json({ ok: true });
   },
 
-  log(group, message, data) {
-    console.log(`[${group}] ${message}`);
+  log(group, message, data, options) {
+    if (options?.logData) {
+      console.log(`[${group}] ${message}`, data);
+    } else {
+      console.log(`[${group}] ${message}`);
+    }
 
     if (config.environment === 'prod') {
       const date = new Date();

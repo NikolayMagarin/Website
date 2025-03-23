@@ -24,7 +24,7 @@ export const handleMessage: RequestHandler = function (req, res) {
     }
 
     if (req.desmos.user.justRegistered) {
-      logger.log('service-desmos', `user-register`, {
+      logger.log('service-desmos', 'user-register', {
         projectId: PROJECT_ID,
         userId: userId,
       });
@@ -52,17 +52,17 @@ export const handleMessage: RequestHandler = function (req, res) {
         userId: userId,
       });
 
-      const timings = [...user.currentMessageTimings]
-        .sort()
-        .map((t) => t - user.currentMessageTimings[0]);
-      const halfDelay = timings[1] - timings[0];
+      const timings = user.currentMessageTimings;
+
       const delays: number[] = [];
       for (let i = 0; i < timings.length - 1; i++) {
         delays.push(timings[i + 1] - timings[i]);
       }
 
+      const halfDelay = calculateHalfDelay(delays);
+
       let result = delays
-        .map((d) => Math.round(d / halfDelay))
+        .map((d) => (d / halfDelay >= 1.5 ? 2 : 1))
         .concat([1])
         .reduce<[number, string]>(
           (acc, d) => {
@@ -84,6 +84,8 @@ export const handleMessage: RequestHandler = function (req, res) {
         data: {
           payload: result,
           size: result.length,
+          decodeFactorType:
+            halfDelay === delays[1] - delays[0] ? 'first' : 'average',
         },
       });
 
@@ -121,3 +123,21 @@ export const handleMessage: RequestHandler = function (req, res) {
     res.status(200).send('');
   }
 };
+
+function calculateHalfDelay(delays: number[]): number {
+  // caclulations in milliseconds
+
+  const min = Math.min(...delays);
+  for (let result = min / 2; result <= min; result++) {
+    if (
+      delays.every((d) => {
+        const rounded = Math.round(d / result);
+        return rounded === 1 || rounded === 2;
+      })
+    ) {
+      return result;
+    }
+  }
+
+  return delays[1] - delays[0];
+}
