@@ -87,7 +87,12 @@ export const handleMessage: RequestHandler = function (req, res) {
         },
       });
 
-      const text = decodeText(result);
+      let text = decodeText(result);
+
+      text = text
+        .split('')
+        .filter((char) => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.includes(char))
+        .join('');
 
       if (text.length) {
         storage.global.chat.messages.push({ userName: user.name, text: text });
