@@ -20,7 +20,7 @@ export function init(rootRouter: Router) {
 
   project.router.get('/message', ...middlewares, handleMessage);
 
-  project.router.get('/get-chat/', ...middlewares, sendChat);
+  project.router.get('/get-chat/', sendChat);
 
   project.router.get('/refresh', ...middlewares, refreshOnMessage);
 
