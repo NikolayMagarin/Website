@@ -43,7 +43,8 @@ export const handleMessage: RequestHandler = function (req, res) {
       });
     }
 
-    // Если данные не поступали уже 2 секунды, то считаем, что сообщение закончилось
+    // Если данные не поступали уже 3 секунды, то считаем, что сообщение закончилось
+    const WAIT_FOR_MESSAGE_END = 3000;
     user.endOfMessageTimeout = setTimeout(() => {
       user.endOfMessageTimeout = null;
       logger.log('service-desmos', 'message end', {
@@ -51,9 +52,9 @@ export const handleMessage: RequestHandler = function (req, res) {
         userId: userId,
       });
 
-      const timings = user.currentMessageTimings.map(
-        (t) => t - user.currentMessageTimings[0]
-      );
+      const timings = [...user.currentMessageTimings]
+        .sort()
+        .map((t) => t - user.currentMessageTimings[0]);
       const halfDelay = timings[1] - timings[0];
       const delays: number[] = [];
       for (let i = 0; i < timings.length - 1; i++) {
@@ -110,7 +111,7 @@ export const handleMessage: RequestHandler = function (req, res) {
       }
 
       user.currentMessageTimings = [];
-    }, 2000);
+    }, WAIT_FOR_MESSAGE_END);
 
     res.status(200).send('');
   }
