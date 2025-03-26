@@ -7,7 +7,7 @@ export interface Project {
   id: string;
   router: Router;
   middlewares: Record<
-    'allowDesmosCors' | 'initDesmos' | 'clientStorage' | 'userAuth',
+    'allowDesmosCors' | 'initDesmos' | 'clientStorage' | 'userAuth' | 'logger',
     RequestHandler
   >;
 }
@@ -29,13 +29,19 @@ export function createProject(id: string, rootRouter: Router): Project {
     next();
   };
 
+  project.middlewares.logger = new Logger({
+    transforms: [
+      (log) => ({ ...log, message: `[desmos:${id}] ${log.message}` }),
+    ],
+  }).middleware();
+
   project.middlewares.initDesmos = (req, res, next) => {
     req.desmos = {
       project,
       clientStorage: undefined,
       pageLoad: undefined,
       firstRequest: undefined,
-      user: { id: undefined, sessionId: undefined },
+      user: { id: undefined, sessionId: undefined, clientIp: undefined },
     } as any;
     res.desmos = { clientStorage: undefined } as any;
 

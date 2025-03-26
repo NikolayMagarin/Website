@@ -1,8 +1,10 @@
 import { RequestHandler } from 'express';
+import { getClientIp } from 'request-ip';
 import { v4 as uuid } from 'uuid';
 
 export function userAuthMiddleware(): RequestHandler {
   return (req, res, next) => {
+    req.desmos.user.clientIp = getClientIp(req);
     if (req.desmos.pageLoad) {
       req.desmos.user.id = null;
       req.desmos.user.sessionId = null;

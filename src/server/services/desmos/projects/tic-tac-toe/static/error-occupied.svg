@@ -1,0 +1,31 @@
+<svg viewBox="0 0 185 60" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .notification {
+      font: 12px Consolas;
+      padding: 10px;
+      position: absolute;
+      bottom: 0px;
+      width: 100%;
+      color: black;
+    }
+
+    .background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: lightgrey;
+      border-radius: 10px;
+    }
+  </style>
+  <foreignObject width="100%" height="100%">
+    <div class="background" xmlns="http://www.w3.org/1999/xhtml" />
+    <div class="notification" xmlns="http://www.w3.org/1999/xhtml">
+      <span style="color: red">Error: You cannot occupy<br />an already occupied cell!</span>
+      <br />
+      <span style="font-size: 8px">(Refresh the page to
+        continue)</span>
+    </div>
+  </foreignObject>
+</svg>

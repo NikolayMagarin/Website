@@ -27,6 +27,10 @@ export interface RequestDesmos {
      */
     id: string | null;
     /**
+     * Alternative way to identify user when `id` is `null`
+     */
+    clientIp: string | null;
+    /**
      * `sessionId` is `null` if `req.desmos.pageLoad` is `true`
      */
     sessionId: string | null;

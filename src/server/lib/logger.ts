@@ -15,6 +15,7 @@ export enum LogLevel {
 }
 
 export interface LogContext {
+  data?: Record<string, any>;
   params?: Record<string, any>;
   result?: Record<string, any>;
   error?: any;
