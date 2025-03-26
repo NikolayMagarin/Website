@@ -1,4 +1,5 @@
 import { type RequestHandler, Router } from 'express';
+import { Logger } from '../../../lib/Logger';
 import { clientStorageMiddleware } from './clientStorage';
 import { userAuthMiddleware } from './userAuth';
 

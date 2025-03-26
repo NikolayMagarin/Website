@@ -1,9 +1,12 @@
-import { logger } from '../../lib/logger';
+import { type Logger } from '../../lib/Logger';
 import { calcTileXY } from './calcTileXY';
 import { getLocation } from './getLocation';
 import { getTile, GetTileResult } from './getTile';
 
-export async function getMapTilesFromIp(ip: string | undefined) {
+export async function getMapTilesFromIp(
+  ip: string | undefined,
+  { logger }: { logger: Logger }
+) {
   if (ip) {
     const location = await getLocation(ip);
     if (location.success) {
@@ -33,16 +36,22 @@ export async function getMapTilesFromIp(ip: string | undefined) {
         return { tiles, dx, dy };
       } else {
         errors.forEach((error) => {
-          logger.log('ERR-get-location-tile', error.toString(), {
-            tileX,
-            tileY,
-            zoom,
+          logger.error('An error occurred while getting map tiles', {
+            error: error,
+            params: {
+              tileX: tileX,
+              tileY: tileY,
+              zoom: zoom,
+            },
           });
         });
       }
     } else {
-      logger.log('ERR-get-ip-location', location.error.toString(), {
-        location: location,
+      logger.error('An error occurred while getting location by ip', {
+        error: location.error,
+        params: {
+          ip: ip,
+        },
       });
     }
   }

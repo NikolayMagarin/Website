@@ -1,6 +1,4 @@
 import { RequestHandler } from 'express';
-import { PROJECT_ID } from '.';
-import { logger } from '../../../../lib/logger';
 import { decodeText } from './decodeText';
 import { storage } from './storage';
 
@@ -24,8 +22,8 @@ export const handleMessage: RequestHandler = function (req, res) {
     }
 
     if (req.desmos.user.justRegistered) {
-      logger.log('service-desmos', 'user-register', {
-        projectId: PROJECT_ID,
+      req.logger.info('User registered', {
+        projectId: req.desmos.project.id,
         userId: userId,
       });
     }
@@ -37,20 +35,14 @@ export const handleMessage: RequestHandler = function (req, res) {
       clearTimeout(user.endOfMessageTimeout);
       user.endOfMessageTimeout = null;
     } else {
-      logger.log('service-desmos', 'message start', {
-        projectId: PROJECT_ID,
-        userId: userId,
-      });
+      req.logger.debug('Message start');
     }
 
     // Если данные не поступали уже 3 секунды, то считаем, что сообщение закончилось
     const WAIT_FOR_MESSAGE_END = 3000;
     user.endOfMessageTimeout = setTimeout(() => {
       user.endOfMessageTimeout = null;
-      logger.log('service-desmos', 'message end', {
-        projectId: PROJECT_ID,
-        userId: userId,
-      });
+      req.logger.debug('Message end');
 
       const timings = user.currentMessageTimings;
 
@@ -78,18 +70,21 @@ export const handleMessage: RequestHandler = function (req, res) {
       }
       result = result.slice(1);
 
-      logger.log('service-desmos', 'new message data', {
-        projectId: PROJECT_ID,
+      let text = decodeText(result);
+
+      req.logger.info('Message decoded', {
+        projectId: req.desmos.project.id,
         userId: userId,
-        data: {
+        params: {
           payload: result,
           size: result.length,
-          decodeFactorType:
-            halfDelay === delays[1] - delays[0] ? 'first' : 'average',
+          ratio: halfDelay === delays[1] - delays[0] ? 'first' : 'average',
+        },
+        result: {
+          payload: text,
+          size: text.length,
         },
       });
-
-      let text = decodeText(result);
 
       text = text
         .split('')
@@ -101,18 +96,9 @@ export const handleMessage: RequestHandler = function (req, res) {
         if (storage.global.chat.messages.length > 20) {
           storage.global.chat.messages.shift();
         }
-
-        logger.log('service-desmos', 'new message text', {
-          projectId: PROJECT_ID,
-          userId: userId,
-          text: {
-            payload: text,
-            size: text.length,
-          },
-        });
       } else {
-        logger.log('service-desmos', `user-login`, {
-          projectId: PROJECT_ID,
+        req.logger.info('User logined', {
+          projectId: req.desmos.project.id,
           userId: userId,
         });
       }

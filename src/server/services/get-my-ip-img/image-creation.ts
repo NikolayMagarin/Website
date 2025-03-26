@@ -6,6 +6,7 @@ import {
   measureTextHeight,
 } from 'jimp';
 import path from 'path';
+import { type Logger } from '../../lib/Logger';
 import { getMapTilesFromIp } from './getMapTiles';
 
 const fontPath = path.resolve(
@@ -54,8 +55,11 @@ export function imageWithText(
   return image;
 }
 
-export async function imageWithIpLocationMap(ip: string | undefined) {
-  const { tiles, dx, dy } = await getMapTilesFromIp(ip);
+export async function imageWithIpLocationMap(
+  ip: string | undefined,
+  { logger }: { logger: Logger }
+) {
+  const { tiles, dx, dy } = await getMapTilesFromIp(ip, { logger });
 
   if (tiles) {
     const images = await Promise.all(tiles.map((tile) => Jimp.read(tile)));

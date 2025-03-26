@@ -15,7 +15,9 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/onmap', async (req, res) => {
-  const image = await imageWithIpLocationMap(req.clientIp);
+  const image = await imageWithIpLocationMap(req.clientIp, {
+    logger: req.logger,
+  });
 
   res.set('Access-Control-Allow-Origin', '*');
   res.set('Content-Disposition', 'attachment;filename=my-location.png');

@@ -1,15 +1,20 @@
 import express from 'express';
 import path from 'path';
-import { logger } from './lib/logger';
+import { Logger } from './lib/Logger';
 import { selfPingHandler, useSelfPingSecret } from './lib/self-ping';
 import { enableServices } from './services';
 
 const app = express();
 
-app.post('/api/self-ping', express.json(), useSelfPingSecret, selfPingHandler);
-app.post('/api/log', express.json(), logger.handler);
+app.use(Logger.middleware());
 
 enableServices(app);
+
+app.post('/api/log', express.json(), (req, res) => {
+  /* TODO: Log user analitics here */
+  res.status(200).json({ ok: true });
+});
+app.post('/api/self-ping', express.json(), useSelfPingSecret, selfPingHandler);
 
 const jsPath = path.join(__dirname, '../..', 'out/client');
 app.use(
